@@ -101,45 +101,7 @@ footer{margin-top:48px;font-size:12px;color:var(--mute);border-top:1px solid var
 <li>Buy rate no worse than reps on the same loads: met</li>
 <li>Zero blocked carriers in the rep queue (guaranteed by construction, kept as a regression check): met</li>
 <li>Decision: <strong>NO-GO, see which line failed</strong></li>
-</ul></section><section><h2>Results on the sample week</h2><div class="tw"><table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Loads covered by an option that passes the rules</td>
-<td>20 of 40 (50%)</td>
-</tr>
-<tr>
-<td>Buy rate vs reps, naive (cheapest option on each load, rules ignored)</td>
-<td>7.1% lower</td>
-</tr>
-<tr>
-<td>Buy rate vs reps, gated, on the loads it covered</td>
-<td>2.4% lower</td>
-</tr>
-<tr>
-<td>Buy rate vs reps, gated, across all 40 loads</td>
-<td>1.1% lower</td>
-</tr>
-<tr>
-<td>Loads where the cheapest option came from a blocked carrier</td>
-<td>16 of 30</td>
-</tr>
-<tr>
-<td>Median minutes on the 20 covered loads, rep to cover vs agent's first passing quote</td>
-<td>96.5 vs 37</td>
-</tr>
-<tr>
-<td>Gate eval</td>
-<td>30 of 30 cases match, 0 unsafe</td>
-</tr>
-</tbody>
-</table></div>
-<p>The minutes line compares different events (a rep's booking vs an agent's quote arriving), so it is a rough signal, not a time-to-cover result.</p>
+</ul></section><section><h2>What a rep sees: the queue</h2><p>Three loads from <code>reports/rep_queue.csv</code>. Passing carriers come first, cheapest first. A REVIEW carrier shows the one thing to check. Blocked carriers never appear, whatever they quoted.</p><div class="tw"><table><thead><tr><th>Load</th><th>Lane</th><th>Rep paid</th><th>Carrier</th><th>Quote</th><th>Decision</th><th>Check first</th></tr></thead><tbody><tr><td>L005</td><td>Irving, TX to El Paso, TX</td><td>$1,430</td><td>C01</td><td>$1,340</td><td>PASS</td><td>&nbsp;</td></tr><tr><td>L005</td><td>Irving, TX to El Paso, TX</td><td>$1,430</td><td>C07</td><td>$1,260</td><td>REVIEW</td><td>authority too new</td></tr><tr><td>L007</td><td>Irving, TX to Houston, TX</td><td>$710</td><td>C01</td><td>$690</td><td>PASS</td><td>&nbsp;</td></tr><tr><td>L007</td><td>Irving, TX to Houston, TX</td><td>$710</td><td>C07</td><td>$640</td><td>REVIEW</td><td>authority too new</td></tr><tr><td>L009</td><td>Irving, TX to Kansas City, MO</td><td>$1,110</td><td>C05</td><td>$1,050</td><td>PASS</td><td>&nbsp;</td></tr><tr><td>L009</td><td>Irving, TX to Kansas City, MO</td><td>$1,110</td><td>C07</td><td>$1,020</td><td>REVIEW</td><td>authority too new</td></tr></tbody></table></div><p>The minutes line compares different events (a rep's booking vs an agent's quote arriving), so it is a rough signal, not a time-to-cover result.</p>
 <p>In this sample week, the naive readout would say the agent cut buy rates by 7.1%. Most of that came from carriers the rules block, so the gated figure is 2.4% on the loads the agent covered and 1.1% across the week, and coverage misses a 60% target. The sample was built to show that gap. A cheap quote from an inactive or underinsured carrier is a risk, not a saving.</p></section><section><h2>Choices worth knowing</h2><ul>
 <li><strong>Same-load comparison.</strong> The agent's best passing quote is compared with what the rep paid on that same load, not with a market average that moves during the week.</li>
 <li><strong>Uncovered loads count.</strong> The all-loads figure counts a load the agent could not cover as no saving, so a pilot cannot look better by only reporting the loads it handled.</li>
