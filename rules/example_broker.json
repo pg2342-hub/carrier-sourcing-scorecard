@@ -1,0 +1,18 @@
+{
+  "_note": "Example written carrier rules for one broker. The values are common broker settings chosen for this demo, not any real broker's policy. Week 1 of the pilot replaces them with the rules the broker's reps actually apply.",
+  "broker": "Example hub (Irving, TX)",
+  "min_auto_liability": 1000000,
+  "min_cargo": 100000,
+  "min_authority_age_days": 90,
+  "new_authority_action": "REVIEW",
+  "blocked_safety_ratings": [
+    "Unsatisfactory"
+  ],
+  "review_safety_ratings": [
+    "Conditional"
+  ],
+  "insurance_buffer_days": 15,
+  "go_no_go": {
+    "coverage_target_pct": 60
+  }
+}

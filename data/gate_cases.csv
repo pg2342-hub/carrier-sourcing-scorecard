@@ -1,0 +1,31 @@
+case_id,what_it_tests,authority_status,authority_granted,auto_liability,cargo,safety_rating,equipment,contact_matches_registry,do_not_use,insurance_expires,load_equipment,pickup_date,expected_decision,expected_reasons
+G01,clean carrier,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,PASS,
+G02,satisfactory rating,ACTIVE,2018-01-01,1000000,100000,Satisfactory,V,Y,N,2027-06-30,V,2026-11-10,PASS,
+G03,coverage exactly at the minimums,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,PASS,
+G04,auto liability one dollar short,ACTIVE,2018-01-01,999999,100000,None,V,Y,N,2027-06-30,V,2026-11-10,BLOCK,auto_liability_below_min
+G05,cargo short,ACTIVE,2018-01-01,1000000,99000,None,V,Y,N,2027-06-30,V,2026-11-10,BLOCK,cargo_below_min
+G06,authority inactive,INACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,BLOCK,authority_not_active
+G07,authority revoked,REVOKED,2018-01-01,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,BLOCK,authority_not_active
+G08,authority 70 days old,ACTIVE,2026-09-01,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,REVIEW,authority_too_new
+G09,authority exactly 90 days old,ACTIVE,2026-08-12,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,PASS,
+G10,authority 89 days old,ACTIVE,2026-08-13,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,REVIEW,authority_too_new
+G11,authority grant date missing,ACTIVE,,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,REVIEW,authority_age_unknown
+G12,conditional safety rating,ACTIVE,2018-01-01,1000000,100000,Conditional,V,Y,N,2027-06-30,V,2026-11-10,REVIEW,safety_rating_conditional
+G13,unsatisfactory safety rating,ACTIVE,2018-01-01,1000000,100000,Unsatisfactory,V,Y,N,2027-06-30,V,2026-11-10,BLOCK,safety_rating_blocked
+G14,phone or email not the registered contact,ACTIVE,2018-01-01,1000000,100000,None,V,N,N,2027-06-30,V,2026-11-10,REVIEW,contact_not_on_registry
+G15,on the broker's do-not-use list,ACTIVE,2018-01-01,1000000,100000,None,V,Y,Y,2027-06-30,V,2026-11-10,BLOCK,on_do_not_use_list
+G16,reefer-only carrier on a dry van load,ACTIVE,2018-01-01,1000000,100000,None,R,Y,N,2027-06-30,V,2026-11-10,BLOCK,equipment_mismatch
+G17,van and reefer carrier on a reefer load,ACTIVE,2018-01-01,1000000,100000,None,V|R,Y,N,2027-06-30,R,2026-11-10,PASS,
+G18,flatbed carrier on a dry van load,ACTIVE,2018-01-01,1000000,100000,None,F,Y,N,2027-06-30,V,2026-11-10,BLOCK,equipment_mismatch
+G19,insurance ends the day before pickup,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2026-11-09,V,2026-11-10,BLOCK,insurance_lapsed_by_pickup
+G20,insurance ends on the pickup day,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2026-11-10,V,2026-11-10,REVIEW,insurance_expires_soon
+G21,insurance ends 15 days after pickup,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2026-11-25,V,2026-11-10,PASS,
+G22,insurance ends 14 days after pickup,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2026-11-24,V,2026-11-10,REVIEW,insurance_expires_soon
+G23,no insurance date on file,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,,V,2026-11-10,BLOCK,insurance_lapsed_by_pickup
+G24,conditional rating and contact mismatch,ACTIVE,2018-01-01,1000000,100000,Conditional,V,N,N,2027-06-30,V,2026-11-10,REVIEW,safety_rating_conditional;contact_not_on_registry
+G25,new authority and cargo short,ACTIVE,2026-10-20,1000000,50000,None,V,Y,N,2027-06-30,V,2026-11-10,BLOCK,cargo_below_min;authority_too_new
+G26,do-not-use carrier with a perfect file,ACTIVE,2010-01-01,5000000,250000,Satisfactory,V,Y,Y,2027-06-30,V,2026-11-10,BLOCK,on_do_not_use_list
+G27,inactive authority and conditional rating,INACTIVE,2018-01-01,1000000,100000,Conditional,V,Y,N,2027-06-30,V,2026-11-10,BLOCK,authority_not_active;safety_rating_conditional
+G28,contact mismatch and insurance ending soon,ACTIVE,2018-01-01,1000000,100000,None,V,N,N,2026-11-20,V,2026-11-10,REVIEW,insurance_expires_soon;contact_not_on_registry
+G29,high limits and satisfactory rating,ACTIVE,2012-05-05,5000000,250000,Satisfactory,V,Y,N,2027-06-30,V,2026-11-10,PASS,
+G30,van and reefer carrier with 9-day-old authority,ACTIVE,2026-11-01,1000000,100000,None,V|R,Y,N,2027-06-30,V,2026-11-10,REVIEW,authority_too_new

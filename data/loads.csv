@@ -1,0 +1,41 @@
+load_id,origin,destination,miles,equipment,pickup_date,rep,rep_buy_rate,rep_minutes_to_cover
+L001,"Irving, TX","Nashville, TN",665,V,2026-11-09,Rep A,1430.0,154
+L002,"Irving, TX","Atlanta, GA",790,V,2026-11-10,Rep B,1860.0,168
+L003,"Irving, TX","Denver, CO",790,V,2026-11-11,Rep A,1810.0,128
+L004,"Irving, TX","Kansas City, MO",500,V,2026-11-12,Rep B,1130.0,69
+L005,"Irving, TX","El Paso, TX",630,V,2026-11-13,Rep A,1430.0,184
+L006,"Irving, TX","Oklahoma City, OK",205,V,2026-11-09,Rep B,610.0,48
+L007,"Irving, TX","Houston, TX",245,V,2026-11-10,Rep A,710.0,62
+L008,"Irving, TX","Shreveport, LA",190,R,2026-11-11,Rep B,530.0,69
+L009,"Irving, TX","Kansas City, MO",500,V,2026-11-12,Rep A,1110.0,127
+L010,"Irving, TX","Memphis, TN",455,V,2026-11-13,Rep B,1000.0,70
+L011,"Irving, TX","Atlanta, GA",790,V,2026-11-09,Rep A,1950.0,83
+L012,"Irving, TX","St. Louis, MO",640,V,2026-11-10,Rep B,1410.0,112
+L013,"Irving, TX","New Orleans, LA",510,V,2026-11-11,Rep A,1170.0,158
+L014,"Irving, TX","Oklahoma City, OK",205,V,2026-11-12,Rep B,620.0,124
+L015,"Irving, TX","El Paso, TX",630,V,2026-11-13,Rep A,1450.0,84
+L016,"Irving, TX","Denver, CO",790,V,2026-11-09,Rep B,1730.0,142
+L017,"Irving, TX","St. Louis, MO",640,V,2026-11-10,Rep A,1410.0,42
+L018,"Irving, TX","Denver, CO",790,R,2026-11-11,Rep B,1740.0,100
+L019,"Irving, TX","Shreveport, LA",190,V,2026-11-12,Rep A,590.0,66
+L020,"Irving, TX","St. Louis, MO",640,V,2026-11-13,Rep B,1450.0,78
+L021,"Irving, TX","Little Rock, AR",320,V,2026-11-09,Rep A,820.0,153
+L022,"Irving, TX","Little Rock, AR",320,V,2026-11-10,Rep B,850.0,38
+L023,"Irving, TX","Shreveport, LA",190,V,2026-11-11,Rep A,580.0,167
+L024,"Irving, TX","New Orleans, LA",510,V,2026-11-12,Rep B,1190.0,93
+L025,"Irving, TX","Atlanta, GA",790,V,2026-11-13,Rep A,1870.0,111
+L026,"Irving, TX","New Orleans, LA",510,V,2026-11-09,Rep B,1090.0,107
+L027,"Irving, TX","El Paso, TX",630,V,2026-11-10,Rep A,1340.0,62
+L028,"Irving, TX","Kansas City, MO",500,R,2026-11-11,Rep B,1100.0,149
+L029,"Irving, TX","Memphis, TN",455,V,2026-11-12,Rep A,1120.0,139
+L030,"Irving, TX","Shreveport, LA",190,V,2026-11-13,Rep B,570.0,69
+L031,"Irving, TX","Kansas City, MO",500,V,2026-11-09,Rep A,1140.0,152
+L032,"Irving, TX","El Paso, TX",630,V,2026-11-10,Rep B,1490.0,66
+L033,"Irving, TX","New Orleans, LA",510,V,2026-11-11,Rep A,1180.0,134
+L034,"Irving, TX","Little Rock, AR",320,V,2026-11-12,Rep B,880.0,57
+L035,"Irving, TX","El Paso, TX",630,V,2026-11-13,Rep A,1400.0,77
+L036,"Irving, TX","New Orleans, LA",510,V,2026-11-09,Rep B,1200.0,132
+L037,"Irving, TX","New Orleans, LA",510,V,2026-11-10,Rep A,1130.0,155
+L038,"Irving, TX","Denver, CO",790,R,2026-11-11,Rep B,1680.0,47
+L039,"Irving, TX","Nashville, TN",665,V,2026-11-12,Rep A,1600.0,165
+L040,"Irving, TX","Shreveport, LA",190,V,2026-11-13,Rep B,600.0,113

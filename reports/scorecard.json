@@ -1,0 +1,23 @@
+{
+  "loads": 40,
+  "loads_with_any_option": 30,
+  "loads_covered_by_passing_option": 20,
+  "coverage_pct": 50.0,
+  "gated_buy_rate_change_pct_all_loads": 1.1,
+  "gated_buy_rate_change_pct_covered_loads": 2.4,
+  "naive_buy_rate_change_pct": 7.1,
+  "loads_where_cheapest_option_is_blocked": 16,
+  "loads_where_cheapest_option_needs_review": 6,
+  "covered_loads_agent_beat_rep_rate": 14,
+  "covered_loads_agent_faster": 20,
+  "median_minutes_rep": 109.0,
+  "median_minutes_first_pass_option": 44.0,
+  "blocked_carriers_in_rep_queue": 0,
+  "go_no_go": {
+    "coverage_target_pct": 60,
+    "coverage_met": false,
+    "buy_rate_not_worse_met": true,
+    "zero_blocked_in_queue_met": true,
+    "go": false
+  }
+}

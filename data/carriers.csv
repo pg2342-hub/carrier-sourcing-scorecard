@@ -1,0 +1,16 @@
+carrier_id,name,authority_status,authority_granted,auto_liability,cargo,safety_rating,equipment,contact_matches_registry,do_not_use,insurance_expires
+C01,Trinity Line Haul (synthetic),ACTIVE,2015-03-02,1000000,100000,Satisfactory,V,Y,N,2027-06-30
+C02,Red River Freight (synthetic),ACTIVE,2019-08-15,1000000,250000,None,V|R,Y,N,2027-02-28
+C03,Brazos Transport (synthetic),ACTIVE,2011-01-20,2000000,100000,Satisfactory,V,Y,N,2027-04-01
+C04,Pecos Carriers (synthetic),ACTIVE,2021-05-10,1000000,100000,None,V,Y,N,2027-01-15
+C05,Cross Timbers Logistics (synthetic),ACTIVE,2017-11-01,1000000,150000,Satisfactory,V|R,Y,N,2027-09-30
+C06,Lone Oak Trucking (synthetic),ACTIVE,2023-02-14,1000000,100000,None,V,Y,N,2027-03-31
+C07,Caddo Lake Express (synthetic),ACTIVE,2026-10-01,1000000,100000,None,V,Y,N,2027-10-01
+C08,Sabine Road Co (synthetic),ACTIVE,2018-06-30,750000,100000,None,V,Y,N,2027-05-31
+C09,Llano Freightways (synthetic),INACTIVE,2016-09-09,1000000,100000,None,V,Y,N,2027-01-31
+C10,Gulf Plains Haulers (synthetic),ACTIVE,2020-04-04,1000000,50000,None,V,Y,N,2027-02-15
+C11,Palo Duro Lines (synthetic),ACTIVE,2014-12-12,1000000,100000,Conditional,V,Y,N,2027-08-31
+C12,Big Thicket Cartage (synthetic),ACTIVE,2012-07-07,1000000,100000,None,V,N,N,2027-07-31
+C13,Blackland Freight (synthetic),ACTIVE,2019-02-02,1000000,100000,None,V,Y,Y,2027-03-15
+C14,Hill Country Reefer (synthetic),ACTIVE,2016-03-03,1000000,100000,Satisfactory,R,Y,N,2027-06-01
+C15,Prairie Star Transport (synthetic),ACTIVE,2018-10-10,1000000,100000,None,V,Y,N,2026-11-18

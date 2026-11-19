@@ -1,0 +1,41 @@
+load_id,lane,rep_buy_rate,carrier_id,quote,decision,check_first
+L003,"Irving, TX to Denver, CO",1810.0,C05,1820.0,PASS,
+L005,"Irving, TX to El Paso, TX",1430.0,C01,1340.0,PASS,
+L005,"Irving, TX to El Paso, TX",1430.0,C07,1260.0,REVIEW,authority_too_new
+L006,"Irving, TX to Oklahoma City, OK",610.0,C04,610.0,PASS,
+L007,"Irving, TX to Houston, TX",710.0,C01,690.0,PASS,
+L007,"Irving, TX to Houston, TX",710.0,C07,640.0,REVIEW,authority_too_new
+L009,"Irving, TX to Kansas City, MO",1110.0,C05,1050.0,PASS,
+L009,"Irving, TX to Kansas City, MO",1110.0,C07,1020.0,REVIEW,authority_too_new
+L012,"Irving, TX to St. Louis, MO",1410.0,C05,1400.0,PASS,
+L013,"Irving, TX to New Orleans, LA",1170.0,C03,1110.0,PASS,
+L013,"Irving, TX to New Orleans, LA",1170.0,C01,1160.0,PASS,
+L014,"Irving, TX to Oklahoma City, OK",620.0,C03,600.0,PASS,
+L014,"Irving, TX to Oklahoma City, OK",620.0,C07,550.0,REVIEW,authority_too_new
+L014,"Irving, TX to Oklahoma City, OK",620.0,C11,600.0,REVIEW,safety_rating_conditional
+L015,"Irving, TX to El Paso, TX",1450.0,C15,1340.0,REVIEW,insurance_expires_soon
+L015,"Irving, TX to El Paso, TX",1450.0,C11,1380.0,REVIEW,safety_rating_conditional
+L017,"Irving, TX to St. Louis, MO",1410.0,C05,1360.0,PASS,
+L017,"Irving, TX to St. Louis, MO",1410.0,C01,1400.0,PASS,
+L017,"Irving, TX to St. Louis, MO",1410.0,C15,1300.0,REVIEW,insurance_expires_soon
+L018,"Irving, TX to Denver, CO",1740.0,C14,1720.0,PASS,
+L020,"Irving, TX to St. Louis, MO",1450.0,C04,1430.0,PASS,
+L020,"Irving, TX to St. Louis, MO",1450.0,C12,1380.0,REVIEW,contact_not_on_registry
+L021,"Irving, TX to Little Rock, AR",820.0,C01,820.0,PASS,
+L021,"Irving, TX to Little Rock, AR",820.0,C04,830.0,PASS,
+L022,"Irving, TX to Little Rock, AR",850.0,C15,770.0,REVIEW,insurance_expires_soon
+L023,"Irving, TX to Shreveport, LA",580.0,C07,520.0,REVIEW,authority_too_new
+L024,"Irving, TX to New Orleans, LA",1190.0,C01,1120.0,PASS,
+L024,"Irving, TX to New Orleans, LA",1190.0,C11,1130.0,REVIEW,safety_rating_conditional
+L026,"Irving, TX to New Orleans, LA",1090.0,C03,1150.0,PASS,
+L027,"Irving, TX to El Paso, TX",1340.0,C04,1340.0,PASS,
+L027,"Irving, TX to El Paso, TX",1340.0,C07,1240.0,REVIEW,authority_too_new
+L029,"Irving, TX to Memphis, TN",1120.0,C07,1010.0,REVIEW,authority_too_new
+L029,"Irving, TX to Memphis, TN",1120.0,C11,1070.0,REVIEW,safety_rating_conditional
+L030,"Irving, TX to Shreveport, LA",570.0,C06,550.0,PASS,
+L031,"Irving, TX to Kansas City, MO",1140.0,C01,1050.0,PASS,
+L031,"Irving, TX to Kansas City, MO",1140.0,C11,1130.0,REVIEW,safety_rating_conditional
+L032,"Irving, TX to El Paso, TX",1490.0,C04,1480.0,PASS,
+L034,"Irving, TX to Little Rock, AR",880.0,C06,880.0,PASS,
+L035,"Irving, TX to El Paso, TX",1400.0,C04,1320.0,PASS,
+L035,"Irving, TX to El Paso, TX",1400.0,C15,1380.0,REVIEW,insurance_expires_soon
