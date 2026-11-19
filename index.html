@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carrier sourcing scorecard</title>
+<meta name="description" content="Scores an AI agent&#x27;s carrier options against what reps booked on the same loads, with the broker&#x27;s written carrier rules as a hard gate.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#000;--mute:#555;--line:#d9d9d9;--soft:#f5f5f5;--bg:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:40px 16px 64px}
+a{color:var(--ink)}
+header .kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 6px}
+h1{font-size:30px;line-height:1.2;margin:0 0 12px;letter-spacing:-.01em}
+.lede{font-size:16px;max-width:760px}
+.lede p{margin:0 0 10px}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 6px}
+.btn{display:inline-block;border:1.5px solid var(--ink);padding:7px 14px;border-radius:6px;text-decoration:none;font-weight:600;font-size:14px}
+.btn.primary{background:var(--ink);color:#fff}
+.note{font-size:13px;color:var(--mute);margin-top:10px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:28px 0 8px}
+.tile{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:var(--soft)}
+.tile .n{font-size:24px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+.tile .l{font-size:13px;color:var(--mute);margin-top:4px}
+section{margin-top:40px;border-top:1px solid var(--line);padding-top:20px}
+h2{font-size:20px;margin:0 0 12px}
+h3{font-size:16px;margin:22px 0 8px}
+h4{font-size:14px;margin:18px 0 6px}
+.tw{overflow-x:auto;margin:10px 0 16px;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+code{font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--soft);padding:1px 4px;border-radius:3px}
+pre{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:12px 14px;overflow-x:auto}
+pre code{background:none;padding:0}
+img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+footer{margin-top:48px;font-size:12px;color:var(--mute);border-top:1px solid var(--line);padding-top:14px}
+</style></head>
+<body><main>
+<header>
+<p class="kicker">Demo · carrier-sourcing-scorecard</p>
+<h1>Carrier sourcing scorecard</h1>
+<div class="lede"><p>A small, runnable version of the shadow week in a four-week carrier sourcing pilot. An AI agent sources carriers for a broker's open loads while the reps keep booking as usual, and this scores the agent's options against what the reps actually booked on the same loads. The broker's written carrier rules are a hard gate, so a cheap quote from a carrier that should never be booked does not count as a saving.</p>
+<p>Everything in <code>data/</code> is synthetic. The carriers, IDs, rates and times are invented, so the numbers below show how the scorecard works and say nothing about any real broker, carrier or vendor.</p></div>
+<div class="links"><a class="btn primary" href="https://github.com/pg2342-hub/carrier-sourcing-scorecard">View the code on GitHub</a><a class="btn" href="#run">Run it yourself</a></div>
+<p class="note">Everything is synthetic: carriers, IDs, rates, and times are invented and say nothing about any real broker, carrier, or vendor. Everything on this page is the committed output of the code in the repository.</p>
+</header>
+<div class="tiles"><div class="tile"><div class="n">7.1% → 1.1%</div><div class="l">naive buy-rate saving vs. gated, across all 40 loads</div></div><div class="tile"><div class="n">20 of 40</div><div class="l">loads covered by an option that passes the written rules</div></div><div class="tile"><div class="n">16 of 30</div><div class="l">loads where the cheapest quote came from a blocked carrier</div></div><div class="tile"><div class="n">30 of 30</div><div class="l">hand-labeled gate cases match, 0 unsafe</div></div></div>
+<section><h2>Sample output: the shadow-week scorecard</h2><p>Synthetic data. These numbers show how the scorecard works and say nothing about any real broker or vendor.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Loads in the week</td>
+<td>40</td>
+</tr>
+<tr>
+<td>Loads with at least one agent option</td>
+<td>30</td>
+</tr>
+<tr>
+<td>Loads covered by an option that passes the written rules</td>
+<td>20 (50.0%)</td>
+</tr>
+<tr>
+<td>Buy rate vs reps, naive (cheapest option, rules ignored, loads with any option)</td>
+<td>7.1% lower</td>
+</tr>
+<tr>
+<td>Buy rate vs reps, gated, on loads with a passing option</td>
+<td>2.4% lower</td>
+</tr>
+<tr>
+<td>Buy rate vs reps, gated, across every load (uncovered loads count as no saving)</td>
+<td>1.1% lower</td>
+</tr>
+<tr>
+<td>Loads where the cheapest option came from a blocked carrier</td>
+<td>16</td>
+</tr>
+<tr>
+<td>Loads where the cheapest option needs a rep check first</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Median minutes on covered loads, rep to cover vs agent's first passing quote (different events, see README)</td>
+<td>96.5 vs 37</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Go / no-go</h3>
+<ul>
+<li>Coverage at least 60% of loads: NOT met</li>
+<li>Buy rate no worse than reps on the same loads: met</li>
+<li>Zero blocked carriers in the rep queue (guaranteed by construction, kept as a regression check): met</li>
+<li>Decision: <strong>NO-GO, see which line failed</strong></li>
+</ul></section><section><h2>Results on the sample week</h2><div class="tw"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Loads covered by an option that passes the rules</td>
+<td>20 of 40 (50%)</td>
+</tr>
+<tr>
+<td>Buy rate vs reps, naive (cheapest option on each load, rules ignored)</td>
+<td>7.1% lower</td>
+</tr>
+<tr>
+<td>Buy rate vs reps, gated, on the loads it covered</td>
+<td>2.4% lower</td>
+</tr>
+<tr>
+<td>Buy rate vs reps, gated, across all 40 loads</td>
+<td>1.1% lower</td>
+</tr>
+<tr>
+<td>Loads where the cheapest option came from a blocked carrier</td>
+<td>16 of 30</td>
+</tr>
+<tr>
+<td>Median minutes on the 20 covered loads, rep to cover vs agent's first passing quote</td>
+<td>96.5 vs 37</td>
+</tr>
+<tr>
+<td>Gate eval</td>
+<td>30 of 30 cases match, 0 unsafe</td>
+</tr>
+</tbody>
+</table></div>
+<p>The minutes line compares different events (a rep's booking vs an agent's quote arriving), so it is a rough signal, not a time-to-cover result.</p>
+<p>In this sample week, the naive readout would say the agent cut buy rates by 7.1%. Most of that came from carriers the rules block, so the gated figure is 2.4% on the loads the agent covered and 1.1% across the week, and coverage misses a 60% target. The sample was built to show that gap. A cheap quote from an inactive or underinsured carrier is a risk, not a saving.</p></section><section><h2>Choices worth knowing</h2><ul>
+<li><strong>Same-load comparison.</strong> The agent's best passing quote is compared with what the rep paid on that same load, not with a market average that moves during the week.</li>
+<li><strong>Uncovered loads count.</strong> The all-loads figure counts a load the agent could not cover as no saving, so a pilot cannot look better by only reporting the loads it handled.</li>
+<li><strong>REVIEW is not coverage.</strong> A carrier that needs a rep check (new authority, conditional rating, contact not on the registry, insurance ending soon) goes in the rep queue with what to check, but the load is not counted as covered.</li>
+<li><strong>BLOCK wins.</strong> If any rule blocks a carrier, it is blocked, and every reason is kept so the decision can be traced.</li>
+<li><strong>Insurance that ends on the pickup day blocks.</strong> Policies typically lapse at 12:01 AM on the expiration date, so the carrier is not covered that day. Insurance ending within 15 days of pickup goes to a rep.</li>
+<li><strong>Equipment must match exactly.</strong> A reefer-only carrier on a dry van load is blocked here. Many brokers do let reefers haul dry freight, so this is a rule choice a broker would set in week 1, not a fact about freight.</li>
+<li><strong>Unsafe means more lenient than the label.</strong> The eval counts PASS where the label says REVIEW or BLOCK, and REVIEW where the label says BLOCK (a blocked carrier would reach a rep), as unsafe.</li>
+<li><strong>New authority is a setting.</strong> Some brokers refuse carriers under a set age, others review them, so <code>new_authority_action</code> takes either.</li>
+</ul></section><section><h2>Limits</h2><ul>
+<li>Synthetic data. A real shadow week would read the broker's load export and the agent's call log.</li>
+<li>The gate reads fields a broker already has (registry status, certificate amounts, do-not-use list). It does not pull registry data itself or read the certificate.</li>
+<li>Thirty gate cases written by hand. A real version would replay the broker's past carrier decisions and compare.</li>
+</ul></section>
+<section id="run"><h2>Run it yourself</h2><pre><code>python3 run.py              # score the sample week, writes reports/
+python3 eval_gate.py        # 30 hand-labeled gate cases
+python3 -m unittest         # 8 tests
+python3 make_sample.py      # rebuild the sample week (fixed seed)
+</code></pre>
+<p>Python 3.9+ and the standard library only.</p><p>Code: <a href="https://github.com/pg2342-hub/carrier-sourcing-scorecard">https://github.com/pg2342-hub/carrier-sourcing-scorecard</a></p></section>
+<footer>Source and full README at <a href="https://github.com/pg2342-hub/carrier-sourcing-scorecard">https://github.com/pg2342-hub/carrier-sourcing-scorecard</a>.</footer>
+</main></body></html>
