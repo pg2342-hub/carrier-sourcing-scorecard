@@ -1,7 +1,8 @@
 """Runs the 30 hand-labeled gate cases.  python3 eval_gate.py [--rules rules/example_broker.json]
 
 A case passes when the decision AND the set of reasons match the label.
-Unsafe = the label says BLOCK or REVIEW but the gate said PASS (a carrier a rep would book unchecked).
+Unsafe = the gate is more lenient than the label: PASS where the label says REVIEW or BLOCK (a rep would book
+unchecked), or REVIEW where the label says BLOCK (a blocked carrier would reach a rep).
 """
 import argparse
 import csv
@@ -28,7 +29,8 @@ def main():
         else:
             misses.append(f'{c["case_id"]} {c["what_it_tests"]}: got {decision} {reasons}, '
                           f'expected {c["expected_decision"]} {sorted(want)}')
-        if decision == PASS and c["expected_decision"] != PASS:
+        rank = {"PASS": 0, "REVIEW": 1, "BLOCK": 2}
+        if rank[decision] < rank[c["expected_decision"]]:
             unsafe += 1
     print(f"{ok} of {len(rows)} cases match, {unsafe} unsafe")
     for m in misses:

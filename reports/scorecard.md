@@ -12,13 +12,11 @@ Synthetic data. These numbers show how the scorecard works and say nothing about
 | Buy rate vs reps, gated, across every load (uncovered loads count as no saving) | 1.1% lower |
 | Loads where the cheapest option came from a blocked carrier | 16 |
 | Loads where the cheapest option needs a rep check first | 6 |
-| Median minutes to cover, reps | 109 |
-| Median minutes to first passing option, agent | 44 |
-| Blocked carriers shown in the rep queue | 0 |
+| Median minutes on covered loads, rep to cover vs agent's first passing quote (different events, see README) | 96.5 vs 37 |
 
 ## Go / no-go
 
 - Coverage at least 60% of loads: NOT met
 - Buy rate no worse than reps on the same loads: met
-- Zero blocked carriers in the rep queue: met
+- Zero blocked carriers in the rep queue (guaranteed by construction, kept as a regression check): met
 - Decision: **NO-GO, see which line failed**

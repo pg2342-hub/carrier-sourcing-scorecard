@@ -34,7 +34,7 @@ def check(carrier, load, rules):
     if load["equipment"] not in equipment:
         block.append("equipment_mismatch")
     expires = _d(carrier.get("insurance_expires"))
-    if expires is None or expires < pickup:
+    if expires is None or expires <= pickup:  # policies lapse at 12:01 AM on the expiration date
         block.append("insurance_lapsed_by_pickup")
     elif (expires - pickup).days < rules["insurance_buffer_days"]:
         review.append("insurance_expires_soon")

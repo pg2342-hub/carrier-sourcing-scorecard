@@ -1,5 +1,5 @@
 case_id,what_it_tests,authority_status,authority_granted,auto_liability,cargo,safety_rating,equipment,contact_matches_registry,do_not_use,insurance_expires,load_equipment,pickup_date,expected_decision,expected_reasons
-G01,clean carrier,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,PASS,
+G01,clean carrier,ACTIVE,2018-01-01,1500000,150000,None,V,Y,N,2027-06-30,V,2026-11-10,PASS,
 G02,satisfactory rating,ACTIVE,2018-01-01,1000000,100000,Satisfactory,V,Y,N,2027-06-30,V,2026-11-10,PASS,
 G03,coverage exactly at the minimums,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2027-06-30,V,2026-11-10,PASS,
 G04,auto liability one dollar short,ACTIVE,2018-01-01,999999,100000,None,V,Y,N,2027-06-30,V,2026-11-10,BLOCK,auto_liability_below_min
@@ -18,7 +18,7 @@ G16,reefer-only carrier on a dry van load,ACTIVE,2018-01-01,1000000,100000,None,
 G17,van and reefer carrier on a reefer load,ACTIVE,2018-01-01,1000000,100000,None,V|R,Y,N,2027-06-30,R,2026-11-10,PASS,
 G18,flatbed carrier on a dry van load,ACTIVE,2018-01-01,1000000,100000,None,F,Y,N,2027-06-30,V,2026-11-10,BLOCK,equipment_mismatch
 G19,insurance ends the day before pickup,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2026-11-09,V,2026-11-10,BLOCK,insurance_lapsed_by_pickup
-G20,insurance ends on the pickup day,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2026-11-10,V,2026-11-10,REVIEW,insurance_expires_soon
+G20,insurance ends on the pickup day,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2026-11-10,V,2026-11-10,BLOCK,insurance_lapsed_by_pickup
 G21,insurance ends 15 days after pickup,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2026-11-25,V,2026-11-10,PASS,
 G22,insurance ends 14 days after pickup,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,2026-11-24,V,2026-11-10,REVIEW,insurance_expires_soon
 G23,no insurance date on file,ACTIVE,2018-01-01,1000000,100000,None,V,Y,N,,V,2026-11-10,BLOCK,insurance_lapsed_by_pickup

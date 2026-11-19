@@ -30,6 +30,10 @@ class GateTests(unittest.TestCase):
         self.assertEqual(check(NEW, LOAD, RULES)[0], REVIEW)
         self.assertEqual(check(NEW, LOAD, {**RULES, "new_authority_action": "BLOCK"})[0], BLOCK)
 
+    def test_insurance_ending_on_pickup_day_blocks(self):
+        d, reasons = check({**GOOD, "insurance_expires": "2026-11-10"}, LOAD, RULES)
+        self.assertEqual((d, reasons), (BLOCK, ["insurance_lapsed_by_pickup"]))
+
     def test_clean_carrier_passes(self):
         self.assertEqual(check(GOOD, LOAD, RULES), (PASS, []))
 

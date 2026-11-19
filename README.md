@@ -9,7 +9,7 @@ Everything in `data/` is synthetic. The carriers, IDs, rates and times are inven
 ```
 python3 run.py              # score the sample week, writes reports/
 python3 eval_gate.py        # 30 hand-labeled gate cases
-python3 -m unittest         # 7 tests
+python3 -m unittest         # 8 tests
 python3 make_sample.py      # rebuild the sample week (fixed seed)
 ```
 
@@ -37,9 +37,10 @@ Python 3.9+ and the standard library only.
 | Buy rate vs reps, gated, on the loads it covered | 2.4% lower |
 | Buy rate vs reps, gated, across all 40 loads | 1.1% lower |
 | Loads where the cheapest option came from a blocked carrier | 16 of 30 |
-| Median minutes to cover, reps vs first passing option | 109 vs 44 |
-| Blocked carriers shown to a rep | 0 |
+| Median minutes on the 20 covered loads, rep to cover vs agent's first passing quote | 96.5 vs 37 |
 | Gate eval | 30 of 30 cases match, 0 unsafe |
+
+The minutes line compares different events (a rep's booking vs an agent's quote arriving), so it is a rough signal, not a time-to-cover result.
 
 In this sample week, the naive readout would say the agent cut buy rates by 7.1%. Most of that came from carriers the rules block, so the gated figure is 2.4% on the loads the agent covered and 1.1% across the week, and coverage misses a 60% target. The sample was built to show that gap. A cheap quote from an inactive or underinsured carrier is a risk, not a saving.
 
@@ -49,6 +50,9 @@ In this sample week, the naive readout would say the agent cut buy rates by 7.1%
 - **Uncovered loads count.** The all-loads figure counts a load the agent could not cover as no saving, so a pilot cannot look better by only reporting the loads it handled.
 - **REVIEW is not coverage.** A carrier that needs a rep check (new authority, conditional rating, contact not on the registry, insurance ending soon) goes in the rep queue with what to check, but the load is not counted as covered.
 - **BLOCK wins.** If any rule blocks a carrier, it is blocked, and every reason is kept so the decision can be traced.
+- **Insurance that ends on the pickup day blocks.** Policies typically lapse at 12:01 AM on the expiration date, so the carrier is not covered that day. Insurance ending within 15 days of pickup goes to a rep.
+- **Equipment must match exactly.** A reefer-only carrier on a dry van load is blocked here. Many brokers do let reefers haul dry freight, so this is a rule choice a broker would set in week 1, not a fact about freight.
+- **Unsafe means more lenient than the label.** The eval counts PASS where the label says REVIEW or BLOCK, and REVIEW where the label says BLOCK (a blocked carrier would reach a rep), as unsafe.
 - **New authority is a setting.** Some brokers refuse carriers under a set age, others review them, so `new_authority_action` takes either.
 
 ## Limits

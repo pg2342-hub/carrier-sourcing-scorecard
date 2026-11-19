@@ -54,6 +54,7 @@ def score(loads, options, carriers, rules):
             "n_review": sum(g["decision"] == REVIEW for g in graded),
             "n_block": sum(g["decision"] == BLOCK for g in graded),
             "best_pass": best,
+            "first_pass_minutes": min(g["minutes"] for g in passing) if passing else None,
             "cheapest_any": cheapest_any,
             "rep_queue": [g for g in graded if g["decision"] != BLOCK],
         })
@@ -77,7 +78,7 @@ def summarize(rows, rules):
     cheapest_review = [r for r in with_any if r["cheapest_any"]["decision"] == REVIEW]
 
     beat = [r for r in covered if r["best_pass"]["quote"] < r["rep_buy"]]
-    faster = [r for r in covered if r["best_pass"]["minutes"] < r["rep_minutes"]]
+    faster = [r for r in covered if r["first_pass_minutes"] < r["rep_minutes"]]
     blocked_in_queue = sum(1 for r in rows for g in r["rep_queue"] if g["decision"] == BLOCK)
 
     s = {
@@ -92,8 +93,8 @@ def summarize(rows, rules):
         "loads_where_cheapest_option_needs_review": len(cheapest_review),
         "covered_loads_agent_beat_rep_rate": len(beat),
         "covered_loads_agent_faster": len(faster),
-        "median_minutes_rep": median(r["rep_minutes"] for r in rows),
-        "median_minutes_first_pass_option": median(r["best_pass"]["minutes"] for r in covered) if covered else None,
+        "median_minutes_rep_covered_loads": median(r["rep_minutes"] for r in covered) if covered else None,
+        "median_minutes_first_passing_option": median(r["first_pass_minutes"] for r in covered) if covered else None,
         "blocked_carriers_in_rep_queue": blocked_in_queue,
     }
     g = rules.get("go_no_go", {})
@@ -101,6 +102,7 @@ def summarize(rows, rules):
         "coverage_target_pct": g.get("coverage_target_pct", 60),
         "coverage_met": s["coverage_pct"] >= g.get("coverage_target_pct", 60),
         "buy_rate_not_worse_met": s["gated_buy_rate_change_pct_covered_loads"] >= 0,
+        # The queue is built without BLOCK options, so this is a built-in guarantee, kept as a regression check.
         "zero_blocked_in_queue_met": blocked_in_queue == 0,
     }
     s["go_no_go"]["go"] = all(v for k, v in s["go_no_go"].items() if k.endswith("_met"))

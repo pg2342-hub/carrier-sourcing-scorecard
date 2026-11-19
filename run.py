@@ -34,13 +34,11 @@ def write_reports(rows, s, out):
         f"| Buy rate vs reps, gated, across every load (uncovered loads count as no saving) | {s['gated_buy_rate_change_pct_all_loads']}% lower |",
         f"| Loads where the cheapest option came from a blocked carrier | {s['loads_where_cheapest_option_is_blocked']} |",
         f"| Loads where the cheapest option needs a rep check first | {s['loads_where_cheapest_option_needs_review']} |",
-        f"| Median minutes to cover, reps | {s['median_minutes_rep']:g} |",
-        f"| Median minutes to first passing option, agent | {s['median_minutes_first_pass_option']:g} |",
-        f"| Blocked carriers shown in the rep queue | {s['blocked_carriers_in_rep_queue']} |",
+        f"| Median minutes on covered loads, rep to cover vs agent's first passing quote (different events, see README) | {s['median_minutes_rep_covered_loads']:g} vs {s['median_minutes_first_passing_option']:g} |",
         "", "## Go / no-go", "",
         f"- Coverage at least {gng['coverage_target_pct']}% of loads: {'met' if gng['coverage_met'] else 'NOT met'}",
         f"- Buy rate no worse than reps on the same loads: {'met' if gng['buy_rate_not_worse_met'] else 'NOT met'}",
-        f"- Zero blocked carriers in the rep queue: {'met' if gng['zero_blocked_in_queue_met'] else 'NOT met'}",
+        f"- Zero blocked carriers in the rep queue (guaranteed by construction, kept as a regression check): {'met' if gng['zero_blocked_in_queue_met'] else 'NOT met'}",
         f"- Decision: **{'GO' if gng['go'] else 'NO-GO, see which line failed'}**", "",
     ]
     with open(f"{out}/scorecard.md", "w") as f:

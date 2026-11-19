@@ -10,8 +10,8 @@
   "loads_where_cheapest_option_needs_review": 6,
   "covered_loads_agent_beat_rep_rate": 14,
   "covered_loads_agent_faster": 20,
-  "median_minutes_rep": 109.0,
-  "median_minutes_first_pass_option": 44.0,
+  "median_minutes_rep_covered_loads": 96.5,
+  "median_minutes_first_passing_option": 37.0,
   "blocked_carriers_in_rep_queue": 0,
   "go_no_go": {
     "coverage_target_pct": 60,
