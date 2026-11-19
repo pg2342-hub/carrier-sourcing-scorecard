@@ -1,5 +1,7 @@
 # Carrier sourcing scorecard
 
+**Demo page (sample output and eval results, no install):** https://pg2342-hub.github.io/carrier-sourcing-scorecard/
+
 A small, runnable version of the shadow week in a four-week carrier sourcing pilot. An AI agent sources carriers for a broker's open loads while the reps keep booking as usual, and this scores the agent's options against what the reps actually booked on the same loads. The broker's written carrier rules are a hard gate, so a cheap quote from a carrier that should never be booked does not count as a saving.
 
 Everything in `data/` is synthetic. The carriers, IDs, rates and times are invented, so the numbers below show how the scorecard works and say nothing about any real broker, carrier or vendor.
