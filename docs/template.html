@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- demo-chrome --><meta name="theme-color" content="#f4f2ec"><link rel="icon" href="https://pranavgudise.dev/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="https://pranavgudise.dev/kit/demo.css"><!-- /demo-chrome -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carrier sourcing scorecard</title>
+<meta name="description" content="Scores an AI agent's carrier options against what reps booked on the same loads, with the broker's written carrier rules as a hard gate.">
+<style>
+.head h1{margin:40px 0 14px}
+.head .lead{max-width:42em}
+.board{margin:32px 0 0;border:1px solid var(--rule);border-radius:16px;background:#fbfaf6;overflow:hidden;scroll-margin-top:24px}
+.vline{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;align-items:center;padding:22px 24px 20px}
+.vline h2{all:unset;display:block;font:400 34px/1.1 var(--serif)}
+.vline p{grid-column:1/-1;margin:0;font-size:17px;max-width:48em}
+.gate{justify-self:end;display:inline-flex;align-items:center;min-height:34px;padding:0 16px;border-radius:999px;font:500 13px/1 var(--mono);letter-spacing:.06em;white-space:nowrap}
+.gate.nogo{background:var(--ink);color:var(--paper)}
+.gate.go{background:var(--green-wash);color:var(--green)}
+.score{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule)}
+.score div{padding:16px 20px;font-size:14px;color:var(--ink-2);line-height:1.4}
+.score div+div{border-left:1px solid var(--rule)}
+.score b{display:block;font:400 32px/1.1 var(--serif);color:var(--ink);margin-bottom:4px;font-variant-numeric:tabular-nums}
+.score b small{font-size:19px;color:var(--ink-2)}
+.checks{list-style:none;margin:0;padding:6px 24px 14px;border-top:1px solid var(--rule)}
+.checks li{display:grid;grid-template-columns:6.5em minmax(0,1fr);gap:12px;align-items:baseline;margin:0;padding:9px 0;border-top:1px solid var(--rule-soft)}
+.checks li:first-child{border-top:0}
+.checks .note{color:var(--ink-2);font-size:14px}
+.met{display:inline-flex;align-items:center;justify-self:start;min-height:24px;padding:0 10px;border-radius:999px;font:500 11.5px/1 var(--mono);letter-spacing:.04em;background:var(--green-wash);color:var(--green)}
+.met.no{background:var(--ink);color:var(--paper)}
+.strip{border-top:1px solid var(--rule);padding:18px 24px 20px}
+.strip h3{margin:0 0 4px;font:400 20px/1.2 var(--serif)}
+.strip .hint{margin:0 0 14px;color:var(--ink-2);font-size:14px}
+.sq{position:relative;display:grid;grid-template-columns:repeat(40,minmax(0,1fr));gap:4px;padding-top:22px}
+.sq button{aspect-ratio:1;min-width:0;min-height:0;padding:0;border:0;border-radius:4px;cursor:pointer;transition:transform .15s var(--ease)}
+.sq button:hover{transform:translateY(-2px)}
+.sq button[aria-pressed=true]{outline:2px solid var(--ink);outline-offset:2px}
+.s-covered{background:var(--green)}
+.s-review{background:repeating-linear-gradient(135deg,var(--ink) 0 1.5px,transparent 1.5px 5px);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.s-blocked{background:var(--ink)}
+.s-none{background:transparent;box-shadow:inset 0 0 0 1.5px var(--rule)}
+.target{position:absolute;top:0;bottom:-6px;border-left:1.5px dashed var(--ink);font:500 11.5px/1 var(--mono);white-space:nowrap;padding-left:6px;pointer-events:none}
+.counts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}
+.counts div{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:10px;align-items:baseline}
+.counts b{grid-row:span 2;font:400 32px/1 var(--serif);font-variant-numeric:tabular-nums}
+.counts .lab{display:flex;align-items:center;gap:8px;font:500 12.5px/1.3 var(--mono);letter-spacing:.03em}
+.counts .lab i{width:12px;height:12px;border-radius:3px;flex:none}
+.counts span:last-child{color:var(--ink-2);font-size:13.5px;line-height:1.35}
+.detail{border-top:1px solid var(--rule);padding:18px 24px 20px;background:var(--paper)}
+.detail h3{margin:0 0 4px;font:400 22px/1.2 var(--serif)}
+.detail h3 span{font:400 14px var(--mono);color:var(--ink-2)}
+.detail .hint{margin:0;color:var(--ink-2);font-size:15px}
+.opts{list-style:none;margin:10px 0 0;padding:0}
+.opts li{display:grid;grid-template-columns:6.5em minmax(0,1fr) 6em 13em;gap:4px 16px;align-items:baseline;margin:0;padding:10px 0;border-top:1px solid var(--rule-soft)}
+.opts .q{text-align:right;font-variant-numeric:tabular-nums}
+.opts .why{color:var(--ink-2);font-size:14px}
+.dec{display:inline-flex;align-items:center;justify-self:start;min-height:24px;padding:0 9px;border-radius:999px;border:1px solid var(--ink);font:500 11.5px/1 var(--mono);letter-spacing:.03em}
+.dec.PASS{background:var(--green-wash);border-color:var(--green-wash);color:var(--green)}
+.dec.REVIEW{border-style:dashed}
+.dec.BLOCK{background:var(--ink);color:var(--paper)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:56px;align-items:start}
+.content h2{scroll-margin-top:24px}
+.side{position:sticky;top:24px;margin-top:64px;display:grid;gap:22px;font-size:14px;color:var(--ink-2)}
+.side h3{margin:0 0 6px;font:500 13px/1.3 var(--sans);color:var(--ink)}
+.side p{margin:0}
+.side nav a{display:block;padding:5px 0;color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule-soft)}
+.side nav a:hover{color:var(--ink)}
+.side pre{font-size:12px;margin:6px 0 0}
+.note{color:var(--ink-2);font-size:15px;max-width:46em;margin-top:14px}
+.bars{border:1px solid var(--rule);border-radius:16px;background:#fbfaf6;padding:18px 20px 14px}
+.bars svg{display:block;width:100%;height:auto}
+.bars text{font:400 13px var(--sans);fill:var(--ink)}
+.bars text.n{font:400 22px var(--serif)}
+.bars text.ax{font:400 11.5px var(--mono);fill:var(--ink-2)}
+.queue td.num{white-space:nowrap}
+ul.choices{padding-left:20px}
+ul.choices li{margin:8px 0}
+@media (max-width:1000px){
+ .layout{grid-template-columns:minmax(0,1fr);gap:0}
+ .side{position:static;margin-top:48px}
+ .score{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .score div:nth-child(3){border-left:0}
+ .score div:nth-child(n+3){border-top:1px solid var(--rule)}
+ .counts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:700px){
+ .vline,.strip,.detail,.checks{padding-left:16px;padding-right:16px}
+ .vline h2{font-size:28px}
+ .vline p{font-size:16px}
+ .score div{padding:14px 16px}
+ .score b{font-size:26px}
+ .sq{grid-template-columns:repeat(10,minmax(0,1fr));gap:6px;padding-top:0}
+ .target{display:none}
+ .counts{grid-template-columns:1fr;gap:10px}
+ .counts b{font-size:28px;min-width:1.2em}
+ .checks li{grid-template-columns:1fr;gap:6px}
+ .opts li{grid-template-columns:6em minmax(0,1fr) auto}
+ .opts .why{grid-column:1/-1}
+ .bars{padding:14px 12px 10px}
+}
+@media (prefers-reduced-motion:reduce){.sq button{transition:none}}
+</style>
+</head>
+<body>
+<!-- demo-chrome --><header class="demo-top"><a class="demo-brand" href="https://pranavgudise.dev/"><svg class="demo-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><g class="n"><path class="f" d="M15.5 8.5 L 13.4 13.4 L 8.5 15.5 L 10.6 10.6 Z"/></g><circle class="p" cx="12" cy="12" r=".7"/></svg><span>Pranav Gudise</span></a><a class="pill" href="https://github.com/pg2342-hub/carrier-sourcing-scorecard">Code on GitHub</a></header><!-- /demo-chrome -->
+<main>
+<div class="head">
+<h1>Carrier sourcing scorecard</h1>
+<p class="lead">The shadow week of a four-week carrier sourcing pilot. An AI agent sources carriers for a broker's open loads while the reps keep booking as usual, and this scores the agent's options against what the reps actually booked on the same loads. The broker's written carrier rules are a hard gate, so a cheap quote from a carrier that should never be booked does not count as a saving.</p>
+</div>
+
+<section class="board" id="scorecard" aria-labelledby="verdict-h">
+  <div class="vline">
+    <h2 id="verdict-h"></h2>
+    <span class="gate" id="gate"></span>
+    <p id="takeaway"></p>
+  </div>
+  <div class="score" id="stats"></div>
+  <ul class="checks" id="gonogo" aria-label="Go / no-go checks"></ul>
+  <div class="strip">
+    <h3 id="loads-h">The week, load by load</h3>
+    <p class="hint">One square per load. Select a load to see every option the agent found and what the rules said.</p>
+    <div class="sq" id="sq"></div>
+    <div class="counts" id="counts"></div>
+  </div>
+  <div class="detail" id="detail" aria-live="polite"></div>
+</section>
+
+<div class="layout">
+<div class="content">
+
+<h2 id="saving">Where the saving went</h2>
+<p>The same week scored two ways. The naive readout takes the cheapest option on every load and ignores the rules. The gated readout counts only options that pass, and the all-loads figure counts a load the agent could not cover as no saving.</p>
+<div class="bars" id="bars"></div>
+<p class="note" id="bars-note"></p>
+
+<h2 id="queue">What a rep sees: the queue</h2>
+<p>Three loads from <code>reports/rep_queue.csv</code>. Passing carriers come first, cheapest first. A REVIEW carrier shows the one thing to check. Blocked carriers never appear, whatever they quoted.</p>
+<div class="scroll"><table class="queue"><thead><tr><th>Load</th><th>Lane</th><th class="num">Rep paid</th><th>Carrier</th><th class="num">Quote</th><th>Decision</th><th>Check first</th></tr></thead><tbody id="queue-rows"></tbody></table></div>
+
+<h2 id="full">The full scorecard</h2>
+<div class="scroll"><table><thead><tr><th>Metric</th><th class="num">Value</th></tr></thead><tbody id="full-rows"></tbody></table></div>
+<p class="note">The minutes line compares different events (a rep's booking vs an agent's quote arriving), so it is a rough signal, not a time-to-cover result.</p>
+
+<h2 id="choices">Choices worth knowing</h2>
+<ul class="choices">
+<li><strong>Same-load comparison.</strong> The agent's best passing quote is compared with what the rep paid on that same load, not with a market average that moves during the week.</li>
+<li><strong>Uncovered loads count.</strong> The all-loads figure counts a load the agent could not cover as no saving, so a pilot cannot look better by only reporting the loads it handled.</li>
+<li><strong>REVIEW is not coverage.</strong> A carrier that needs a rep check (new authority, conditional rating, contact not on the registry, insurance ending soon) goes in the rep queue with what to check, but the load is not counted as covered.</li>
+<li><strong>BLOCK wins.</strong> If any rule blocks a carrier, it is blocked, and every reason is kept so the decision can be traced.</li>
+<li><strong>Insurance that ends on the pickup day blocks.</strong> Policies typically lapse at 12:01 AM on the expiration date, so the carrier is not covered that day. Insurance ending within 15 days of pickup goes to a rep.</li>
+<li><strong>Equipment must match exactly.</strong> A reefer-only carrier on a dry van load is blocked here. Many brokers do let reefers haul dry freight, so this is a rule choice a broker would set in week 1, not a fact about freight.</li>
+<li><strong>Unsafe means more lenient than the label.</strong> The eval counts PASS where the label says REVIEW or BLOCK, and REVIEW where the label says BLOCK (a blocked carrier would reach a rep), as unsafe.</li>
+<li><strong>New authority is a setting.</strong> Some brokers refuse carriers under a set age, others review them, so <code>new_authority_action</code> takes either.</li>
+</ul>
+
+<h2 id="limits">Limits</h2>
+<ul class="choices">
+<li>Synthetic data. A real shadow week would read the broker's load export and the agent's call log.</li>
+<li>The gate reads fields a broker already has (registry status, certificate amounts, do-not-use list). It does not pull registry data itself or read the certificate.</li>
+<li>Thirty gate cases written by hand. A real version would replay the broker's past carrier decisions and compare.</li>
+</ul>
+</div>
+
+<aside class="side" aria-label="About this build">
+  <nav aria-label="On this page"><a href="#scorecard">Scorecard</a><a href="#loads-h">Load by load</a><a href="#saving">Where the saving went</a><a href="#queue">What a rep sees</a><a href="#full">The full scorecard</a><a href="#choices">Choices worth knowing</a><a href="#limits">Limits</a></nav>
+  <div><h3>Data</h3><p>Everything is synthetic: 40 dry van and reefer loads out of one hub, 15 invented carriers, invented rates and times. The numbers show how the scorecard works and say nothing about any real broker, carrier or vendor.</p></div>
+  <div><h3>Run it yourself</h3><p>Python 3.9 or later, standard library only. From the repo folder:</p><pre>python3 run.py
+python3 eval_gate.py
+python3 -m unittest
+python3 make_sample.py</pre></div>
+  <div><a class="pill" href="https://github.com/pg2342-hub/carrier-sourcing-scorecard">Code on GitHub</a></div>
+</aside>
+</div>
+</main>
+<script>
+const D = /*DATA*/null;
+const S = D.summary, G = S.go_no_go, L = D.loads;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const usd = v => "$" + Math.round(v).toLocaleString("en-US");
+const words = r => r.replace(/_/g," ");
+const fmt = v => (+v).toString();
+// verdict
+const h=document.getElementById("verdict-h"), g=document.getElementById("gate");
+if (G.go) { h.textContent="Ready to go live"; g.className="gate go"; g.textContent="GO"; }
+else { h.textContent = G.coverage_met ? "Not ready" : `Not ready: coverage misses the ${G.coverage_target_pct}% target`; g.className="gate nogo"; g.textContent="NO-GO"; }
+document.getElementById("takeaway").innerHTML =
+  `<b>The agent covered ${S.loads_covered_by_passing_option} of ${S.loads} loads with a carrier that passes the written rules (${fmt(S.coverage_pct)}%, target ${G.coverage_target_pct}%).</b> `+
+  `A naive readout says buy rates fell ${fmt(S.naive_buy_rate_change_pct)}%. Most of that came from carriers the rules block: gated, it is ${fmt(S.gated_buy_rate_change_pct_covered_loads)}% on the loads the agent covered and ${fmt(S.gated_buy_rate_change_pct_all_loads)}% across the week.`;
+const E = D.gate_eval;
+document.getElementById("stats").innerHTML = [
+  [`${S.loads_covered_by_passing_option} <small>of ${S.loads}</small>`,"loads covered by an option that passes the written rules"],
+  [`${fmt(S.naive_buy_rate_change_pct)}% <small>to</small> ${fmt(S.gated_buy_rate_change_pct_all_loads)}%`,"naive buy-rate saving vs gated, across all loads"],
+  [`${S.loads_where_cheapest_option_is_blocked} <small>of ${S.loads_with_any_option}</small>`,"loads where the cheapest quote came from a blocked carrier"],
+  [`${E.match} <small>of ${E.cases}</small>`,`hand-labeled gate cases match, ${E.unsafe} unsafe`]
+].map(s=>`<div><b>${s[0]}</b>${s[1]}</div>`).join("");
+const met = ok => `<span class="met ${ok?"":"no"}">${ok?"MET":"NOT MET"}</span>`;
+document.getElementById("gonogo").innerHTML = [
+  [G.coverage_met, `Coverage at least ${G.coverage_target_pct}% of loads`, `${fmt(S.coverage_pct)}% this week`],
+  [G.buy_rate_not_worse_met, "Buy rate no worse than reps on the same loads", `${fmt(S.gated_buy_rate_change_pct_covered_loads)}% lower on covered loads`],
+  [G.zero_blocked_in_queue_met, "Zero blocked carriers in the rep queue", "guaranteed by construction, kept as a regression check"]
+].map(c=>`<li>${met(c[0])}<span>${c[1]} <span class="note">${c[2]}</span></span></li>`).join("");
+
+// load strip
+const ST = [["covered","COVERED","an option passes the rules"],["review","REP CHECK","only options that need a rep check"],["blocked","BLOCKED","only blocked carriers quoted"],["none","NO OPTION","the agent found nothing"]];
+let sel = null;
+const sq = document.getElementById("sq");
+const tgt = Math.round(S.loads * G.coverage_target_pct / 100);
+const order = [...L].sort((a,b)=>ST.findIndex(s=>s[0]==a.status)-ST.findIndex(s=>s[0]==b.status) || a.id.localeCompare(b.id));
+sq.innerHTML = order.map(r=>`<button type="button" class="s-${r.status}" data-id="${r.id}" aria-pressed="false" aria-controls="detail" aria-label="${r.id}: ${ST.find(s=>s[0]==r.status)[1].toLowerCase()}" title="${r.id}, ${esc(r.lane)}"></button>`).join("") +
+  `<span class="target" style="left:calc(${tgt} * (100% + 4px) / ${S.loads} - 3px)">${G.coverage_target_pct}% target</span>`;
+document.getElementById("counts").innerHTML = ST.map(s=>{const n=L.filter(r=>r.status==s[0]).length; return `<div><b>${n}</b><span class="lab"><i class="s-${s[0]}"></i>${s[1]}</span><span>${s[2]}</span></div>`;}).join("");
+function pick(id){
+  sel = sel==id ? null : id;
+  sq.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.id==sel)));
+  const det = document.getElementById("detail");
+  if(!sel){ det.innerHTML = `<p class="hint">Select a load above to see the agent's options on it.</p>`; return; }
+  const r = L.find(x=>x.id==sel);
+  const diff = r.best!=null ? ` Best passing quote ${usd(r.best)}, ${r.best<r.rep_buy?usd(r.rep_buy-r.best)+" under":r.best>r.rep_buy?usd(r.best-r.rep_buy)+" over":"the same as"} the rep. First passing quote after ${fmt(r.first_pass_minutes)} minutes; the rep covered it in ${fmt(r.rep_minutes)}.` : r.options.length ? " No option passes the rules, so the load is not covered." : "";
+  det.innerHTML = `<h3>${esc(r.lane)} <span>${r.id}</span></h3><p class="hint">The rep paid ${usd(r.rep_buy)}.${diff} Select the load again to close.</p>`+
+    (r.options.length ? `<ul class="opts">${r.options.map(o=>`<li><span class="dec ${o.decision}">${o.decision}</span><span>${esc(o.carrier)} <span class="why">${esc(o.name)}</span></span><span class="q">${usd(o.quote)}</span><span class="why">${o.reasons.length?esc(o.reasons.map(words).join(", ")):"meets every rule"}</span></li>`).join("")}</ul>`
+      : `<p class="hint" style="margin-top:8px">The agent found no carrier for this load.</p>`);
+}
+sq.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>pick(b.dataset.id)));
+pick("L009");
+
+// savings bars, drawn to scale
+function drawBars(){
+  const rows = [
+    ["Naive: cheapest option on each load, rules ignored", S.naive_buy_rate_change_pct, `${S.loads_with_any_option} loads with any option`, "naive"],
+    ["Gated, on the loads it covered", S.gated_buy_rate_change_pct_covered_loads, `${S.loads_covered_by_passing_option} loads`, "g1"],
+    ["Gated, across every load", S.gated_buy_rate_change_pct_all_loads, `all ${S.loads} loads`, "g2"]];
+  const box=document.getElementById("bars"), w=Math.min(720, Math.max(280, box.clientWidth-30)), narrow=w<560, left=14, lab=narrow?40:24, bh=26, rh=narrow?90:74, mx=Math.ceil(Math.max(...rows.map(r=>r[1])));
+  const sx = v => left + v/mx*(w-80);
+  let out = "";
+  for (let t=0;t<=mx;t+=2){ out += `<line x1="${sx(t)}" x2="${sx(t)}" y1="10" y2="${rows.length*rh+4}" stroke="var(--rule-soft)"/><text class="ax" x="${sx(t)}" y="${rows.length*rh+20}" text-anchor="middle">${t}%</text>`; }
+  rows.forEach((r,i)=>{
+    const y = i*rh + lab;
+    const fill = r[3]=="naive" ? `fill="url(#hatch)" stroke="var(--ink)" stroke-width="1.5"` : `fill="${r[3]=="g2"?"var(--green)":"var(--green-wash)"}"` + (r[3]=="g1"?` stroke="var(--green)" stroke-width="1.5"`:"");
+    out += (narrow ? `<text x="${left}" y="${y-24}">${r[0].replace("Naive: cheapest option on each load, rules ignored","Naive, rules ignored")}</text><text class="ax" x="${left}" y="${y-8}">${r[2]}</text>` : `<text x="${left}" y="${y-8}">${r[0]} <tspan class="ax" dx="6">${r[2]}</tspan></text>`)+
+      `<rect x="${left}" y="${y}" width="${sx(r[1])-left}" height="${bh}" rx="4" ${fill}/>`+
+      `<text class="n" x="${sx(r[1])+10}" y="${y+21}">${fmt(r[1])}%</text>`;
+  });
+  box.innerHTML = `<svg viewBox="0 0 ${w} ${rows.length*rh+26}" role="img" aria-label="Buy rate below the reps: naive ${S.naive_buy_rate_change_pct}%, gated on covered loads ${S.gated_buy_rate_change_pct_covered_loads}%, gated across all loads ${S.gated_buy_rate_change_pct_all_loads}%"><defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#fbfaf6"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--ink)" stroke-width="1.5"/></pattern></defs>${out}</svg>`;
+  document.getElementById("bars-note").textContent = `On ${S.loads_where_cheapest_option_is_blocked} of the ${S.loads_with_any_option} loads with any option, the cheapest quote came from a blocked carrier, and on ${S.loads_where_cheapest_option_needs_review} more it needed a rep check first. The agent beat the rep's rate on ${S.covered_loads_agent_beat_rep_rate} of the ${S.loads_covered_by_passing_option} covered loads. The sample was built to show this gap: a cheap quote from an inactive or underinsured carrier is a risk, not a saving.`;
+}
+drawBars();
+let bw = innerWidth; addEventListener("resize", ()=>{ if (innerWidth!=bw){ bw=innerWidth; drawBars(); } });
+
+// rep queue excerpt
+document.getElementById("queue-rows").innerHTML = ["L005","L007","L009"].map(id=>{
+  const r = L.find(x=>x.id==id);
+  return r.options.filter(o=>o.decision!="BLOCK").map(o=>`<tr><td class="mono">${r.id}</td><td>${esc(r.lane)}</td><td class="num">${usd(r.rep_buy)}</td><td class="mono">${o.carrier}</td><td class="num">${usd(o.quote)}</td><td><span class="dec ${o.decision}">${o.decision}</span></td><td>${esc(o.reasons.map(words).join("; "))}</td></tr>`).join("");
+}).join("");
+
+// full scorecard
+document.getElementById("full-rows").innerHTML = [
+  ["Loads in the week", S.loads],
+  ["Loads with at least one agent option", S.loads_with_any_option],
+  ["Loads covered by an option that passes the written rules", `${S.loads_covered_by_passing_option} (${S.coverage_pct.toFixed(1)}%)`],
+  ["Buy rate vs reps, naive (cheapest option, rules ignored, loads with any option)", `${fmt(S.naive_buy_rate_change_pct)}% lower`],
+  ["Buy rate vs reps, gated, on loads with a passing option", `${fmt(S.gated_buy_rate_change_pct_covered_loads)}% lower`],
+  ["Buy rate vs reps, gated, across every load (uncovered loads count as no saving)", `${fmt(S.gated_buy_rate_change_pct_all_loads)}% lower`],
+  ["Loads where the cheapest option came from a blocked carrier", S.loads_where_cheapest_option_is_blocked],
+  ["Loads where the cheapest option needs a rep check first", S.loads_where_cheapest_option_needs_review],
+  ["Median minutes on covered loads, rep to cover vs agent's first passing quote (different events)", `${fmt(S.median_minutes_rep_covered_loads)} vs ${fmt(S.median_minutes_first_passing_option)}`]
+].map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td></tr>`).join("");
+</script>
+<!-- demo-chrome --><footer class="demo-foot"><span>A working build by <a href="https://pranavgudise.dev/">Pranav Gudise</a>. Synthetic or public data only.</span><a href="https://github.com/pg2342-hub/carrier-sourcing-scorecard">github.com/pg2342-hub/carrier-sourcing-scorecard</a></footer><!-- /demo-chrome -->
+</body>
+</html>
